@@ -1,2 +1,2 @@
-Cisco IOS - Command Generator:\n
+Cisco IOS - Command Generator:\
 Generate Cisco IOS commands from natural language prompts using AI.
