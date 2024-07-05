@@ -5,6 +5,8 @@ st.title("Cisco IOS - Command Generator")
 st.subheader("What would you like to do on the Cisco device?")
 user_input = st.text_input("EG: I want to configure an ip address on interface fa0/0")
 
+
+# Streamlit App
 if st.button("Generate Commands") and user_input:
     with st.spinner("Generating commands..."):
         json_str_res = generateCommands_JSONStr(user_input=user_input)
