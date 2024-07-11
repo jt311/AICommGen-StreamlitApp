@@ -26,3 +26,5 @@ def generateCommands_JSONToDict(json_str):
 # Define uuid -> str function
 def UuidStr():
     return str(uuid.uuid4())
+
+# Define ChatMessageStyle function
