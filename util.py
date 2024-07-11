@@ -1,5 +1,6 @@
 import re
 import json
+import uuid
 from llm import commGen_LLMChain
 
 def generateCommands_JSONStr(user_input):
@@ -21,3 +22,7 @@ def removeJSON_markdown(json):
 
 def generateCommands_JSONToDict(json_str):
     return json.loads(json_str)
+
+# Define uuid -> str function
+def UuidStr():
+    return str(uuid.uuid4())

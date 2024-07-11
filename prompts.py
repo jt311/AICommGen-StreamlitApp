@@ -31,3 +31,11 @@ SYSTEM_MSG_TEMPLATE = """You are a helpful command generator that can generate c
       { "description": "Set the VTP domain to cisco:", "command": "vtp domain cisco" }]
   }
   """
+
+EX_1 = """configure an ip address on interface FastEthernet0/0.
+          Then, I want to run hsrp on this interface with virtual ip 10.10.10.1"""
+
+EX_2 = """configure ospf on R1.
+          The network is 10.0.0.0, the wildcard mask is 0.0.255.255 and the area is 1"""
+
+EX_3 = """view the routing table on R2"""

@@ -1,25 +1,30 @@
 import streamlit as st
-from output import generateCommands_JSONStr, generateCommands_JSONToDict
+from util import generateCommands_JSONStr, generateCommands_JSONToDict, UuidStr
+from prompts import EX_1, EX_2, EX_3
 
-st.title("Cisco IOS - Command Generator :link:")
-st.subheader(":green[What would you like to do on the Cisco device?]")
-with st.expander("See examples"):
-    with st.container():
-        st.markdown("""**:green[I want to]** configure an ip address on interface FastEthernet0/0.
-                    Then, I want to run hsrp on this interface with virtual ip 10.10.10.1""")
-        
-        st.markdown("""**:green[I want to]** configure ospf on R1.
-                    The network is 10.0.0.0, the wildcard mask is 0.0.255.255 and the area is 1""")
-        
-        st.markdown("""**:green[I want to]** view the routing table on R3""")
 
 # Streamlit App
+st.title("Cisco IOS - Command Generator :link:")
+st.subheader(":green[What would you like to do on the Cisco device?]")
+intent_str = "**:green[I want to]**"
+with st.expander("See examples"):
+    with st.container():
+        st.markdown(f"{intent_str} {EX_1}")
+        st.markdown(f"{intent_str} {EX_2}")
+        st.markdown(f"{intent_str} {EX_3}")
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] == "assistant":
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+            st.button(label="Copy Commands", type="primary", key=UuidStr())
+    else:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
 
 if user_input := st.chat_input("I want to..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -39,6 +44,6 @@ if user_input := st.chat_input("I want to..."):
      
     with st.chat_message("assistant"):
         st.markdown(f"{llm_response}")
-        # add Copy Commands button to Pop-Up
-        
+        st.button(label="Copy Commands", type="primary", key=UuidStr())
+
     st.session_state.messages.append({"role": "assistant", "content": llm_response})
