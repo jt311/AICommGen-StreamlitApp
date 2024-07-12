@@ -1,6 +1,7 @@
 import re
 import json
 import uuid
+import pyperclip
 from llm import commGen_LLMChain
 
 def generateCommands_JSONStr(user_input):
@@ -27,4 +28,8 @@ def generateCommands_JSONToDict(json_str):
 def UuidStr():
     return str(uuid.uuid4())
 
-# Define ChatMessageStyle function
+# Define ButtonCallbackFn
+def copyCallback(comm_arr):
+    comm_str_arr = [comm_object['command'] for comm_object in comm_arr]
+    str_to_copy = '\n'.join([*comm_str_arr])
+    pyperclip.copy(str_to_copy)
