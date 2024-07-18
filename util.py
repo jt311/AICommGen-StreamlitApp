@@ -3,14 +3,15 @@ import json
 import uuid
 import pyperclip
 import streamlit as st
+from langsmith import Client, traceable, RunTree
 from llm import commGen_LLMChain
 
-def generateCommands_JSONStr(user_input):
+@traceable(run_type="chain", name="CommGen Chain")
+def generateCommands_JSONStr(user_input, run_tree: RunTree):
     if (isinstance(user_input, str)):
         res = commGen_LLMChain.predict(input=user_input)
         json_str = cleanJSONString(res)
-        return removeJSON_markdown(json_str)
-    return "Invalid Input"
+        return removeJSON_markdown(json_str), run_tree.id
 
 def cleanJSONString(llm_res):
     newline_pattern = r'\s*\n\s*'
@@ -36,7 +37,7 @@ def copyCallback(comm_arr):
     pyperclip.copy(str_to_copy)
 
 # Define ChatMsgStyleFn to style the elements inside chat message container
-def ChatMsgStyle(comm_flow_name, comm_arr):
+def ChatMsgStyle(comm_flow_name, comm_arr, run_id):
     st.markdown(f"**:orange[{comm_flow_name}]**")
 
     for idx, comm_object in enumerate(comm_arr):
@@ -54,6 +55,43 @@ def ChatMsgStyle(comm_flow_name, comm_arr):
             args=(comm_arr, ))                
     
     with col2:
-        st.button(label=":thumbsup:", help="Good Response", key=UuidStr())
+        st.button(
+            label=":thumbsup:",
+            help="Good Response",
+            key=UuidStr(),
+            on_click=handleUserFeedback,
+            args=(run_id,1))
+        
     with col3:
-        st.button(label=":thumbsdown:", help='Bad Response', key=UuidStr())
+        st.button(
+            label=":thumbsdown:",
+            help='Bad Response',
+            key=UuidStr(),
+            on_click=handleUserFeedback,
+            args=(run_id,0))
+
+# LangSmith Feedback
+def handleUserFeedback(run_id, user_score):
+    print("Called handler")
+    ls_client = Client()
+    if run_id:
+        score_mappings = {1:"👍", 0:"👎"}
+
+        if user_score is not None:
+            # Formulate feedback type string incorporating the score value
+            feedback_type_str = f"User Feedback: {score_mappings[user_score]}"
+
+            # Record the feedback with the formulated feedback type string
+            # and optional comment
+            ls_client.create_feedback(
+                run_id,
+                feedback_type_str,
+                score=user_score
+            )
+        else:
+            st.warning("Invalid feedback score.")
+
+        
+# Clear messages from session state
+def clearMsgs():
+    st.session_state.messages = []
