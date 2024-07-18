@@ -39,3 +39,5 @@ EX_2 = """configure ospf on R1.
           The network is 10.0.0.0, the wildcard mask is 0.0.255.255 and the area is 1"""
 
 EX_3 = """view the routing table on R2"""
+
+INTENT_STR = "**:green[I want to]**"
