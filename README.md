@@ -6,4 +6,4 @@ Created to save Network Administrators and Network Engineers time and frustratio
 Built with LangChain, Streamlit and OpenAI API using model GPT-4o.
 
 Here is a video demonstrating how it works:
-streamlit-main-2025-01-24-14-01-95.webm
+[streamlit-main-2025-01-24-14-01-95.webm]
